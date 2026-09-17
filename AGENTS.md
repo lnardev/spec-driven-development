@@ -17,6 +17,30 @@ When working on this project, load the relevant skill(s) BEFORE writing any code
 | `impeccable` | Frontend UI design, layout, styling, polishing CSS/components. | [`skills/impeccable/SKILL.md`](skills/impeccable/SKILL.md) |
 | `security-audit` | Vulnerability review, auth checks, threat modeling, security review. | [`skills/security-audit/SKILL.md`](skills/security-audit/SKILL.md) |
 | `go-testing` | Go unit tests, Bubbletea TUI, table-driven tests, teatest coverage. | [`skills/go-testing/SKILL.md`](skills/go-testing/SKILL.md) |
+| `sdd-init` | Initialize SDD context, testing capabilities, and OpenSpec structure. | [`skills/sdd-init/SKILL.md`](skills/sdd-init/SKILL.md) |
+| `sdd-explore` | Deep codebase and architectural exploration before proposing changes. | [`skills/sdd-explore/SKILL.md`](skills/sdd-explore/SKILL.md) |
+| `sdd-propose` | Create structured change proposals (`proposal.md`) with intent and scope. | [`skills/sdd-propose/SKILL.md`](skills/sdd-propose/SKILL.md) |
+| `sdd-spec` | Write BDD Given/When/Then requirements and capability specifications. | [`skills/sdd-spec/SKILL.md`](skills/sdd-spec/SKILL.md) |
+| `sdd-design` | Produce technical architecture design, data flow, and trade-offs. | [`skills/sdd-design/SKILL.md`](skills/sdd-design/SKILL.md) |
+| `sdd-tasks` | Break down design into atomic, ordered implementation tasks (`tasks.md`). | [`skills/sdd-tasks/SKILL.md`](skills/sdd-tasks/SKILL.md) |
+| `sdd-apply` | Implement tasks in code following specs, design, and TDD constraints. | [`skills/sdd-apply/SKILL.md`](skills/sdd-apply/SKILL.md) |
+| `sdd-verify` | Verify implementation against spec scenarios and run test checks. | [`skills/sdd-verify/SKILL.md`](skills/sdd-verify/SKILL.md) |
+| `sdd-archive` | Archive completed changes and update master specifications. | [`skills/sdd-archive/SKILL.md`](skills/sdd-archive/SKILL.md) |
+
+## Custom Subagents
+
+| Subagent | Role | Tools | Path |
+|----------|------|-------|------|
+| `tony-stark` | Read-only analysis, trade-offs, architecture, and step-by-step design. | Read-only & search (`read_file`, `grep`, `glob`, `web_search`) | [`agents/planner.md`](agents/planner.md) |
+| `orchestrator` | Task coordination, skill delegation, code changes, and DoD validation. | Full edit, tasks & execution (`edit_file`, `write_file`, `todo_write`, `powershell`) | [`agents/orchestrator.md`](agents/orchestrator.md) |
+
+## Custom Slash Commands
+
+| Command | Usage | Action | Path |
+|---------|-------|--------|------|
+| `/plan-flow` | `/plan-flow <task>` | Explora arquitectura y diseña plan de ejecución sin tocar código. | [`.commandcode/commands/plan-flow.md`](.commandcode/commands/plan-flow.md) |
+| `/orchestrate` | `/orchestrate <task>` | Ejecuta tarea paso a paso con checklists, skills y validación DoD. | [`.commandcode/commands/orchestrate.md`](.commandcode/commands/orchestrate.md) |
+| `/audit-code` | `/audit-code [path]` | Dispara auditoría de vulnerabilidades con `security-audit`. | [`.commandcode/commands/audit-code.md`](.commandcode/commands/audit-code.md) |
 
 ## Agent Execution Rules
 
