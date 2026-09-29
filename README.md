@@ -1,70 +1,60 @@
-# Agent Skill Workspace
+# Spec-driven development
 
-Entorno de trabajo estructurado para desarrollo con agentes de IA autónomos (Command Code, Claude Code, OpenCode, Cursor, Pi). Sigue un enfoque **Spec-Driven Development (SDD)** con subagentes especializados y un catálogo modular de skills.
+Configuración compartida para agentes de código: Pi, OpenCode, Command Code, Claude Code, Cursor y Gemini CLI. Un solo directorio con las reglas, skills, subagentes y prompts que todos los agentes leen, para que cada uno se comporte igual sin importar la herramienta.
 
----
+El punto de entrada es `AGENTS.md`. Es la fuente única de verdad: skills disponibles, subagentes, prompts y reglas de ejecución. `CLAUDE.md` existe porque Claude Code busca ese nombre, y solo apunta a `AGENTS.md`.
 
-## 🏛️ Estructura del Proyecto
+## Estructura
 
-```text
-.
-├── .atl/                    # Registros globales y metadatos de skills (skill-registry.md)
-├── .commandcode/            # Configuración local de Command Code (commands, agents)
-├── agents/                  # Subagentes especializados de alto nivel
-│   ├── planner.md           # Análisis de arquitectura y diseño sin efectos secundarios
-│   └── orchestrator.md      # Coordinación paso a paso, checklist y cumplimiento de DoD
-├── commands/                # Comandos rápidos slash (/plan-flow, /orchestrate, /audit-code)
-├── openspec/                # Framework de especificaciones SDD (OpenSpec)
-│   ├── config.yaml          # Configuración del proyecto, linters y suites de test
-│   ├── specs/               # Especificaciones maestras del sistema (Source of Truth)
-│   └── changes/             # Propuestas activas e histórico de cambios
-├── skills/                  # Catálogo de habilidades modulares (SKILL.md)
-│   ├── sdd-*                # Pipeline SDD completo (init, explore, propose, spec, etc.)
-│   ├── caveman/             # Respuestas ultracompactas para ahorro de tokens
-│   ├── humanizer/           # Redacción técnica natural sin clichés de IA
-│   ├── diagram-design/      # Diagramas técnicos en HTML y SVG
-│   ├── impeccable/          # Diseño UI, maquetación CSS y componentes
-│   ├── security-audit/      # Auditoría de vulnerabilidades y seguridad
-│   └── go-testing/          # Patrones de testing y componentes Bubbletea en Go
-├── AGENTS.md                # Fuente única de verdad y directivas para agentes
-├── CLAUDE.md                # Puente de compatibilidad para Claude Code
-└── .gitignore               # Exclusión de temporales, binarios y artefactos
+```
+AGENTS.md            fuente única de verdad para todos los agentes
+CLAUDE.md            shim que redirige a AGENTS.md
+agents/              subagentes (planner, orchestrator)
+prompts/             flujos reutilizables (/plan-flow, /orchestrate, /audit-code)
+commands/            mismos flujos con formato de comando para los harness que lo usan
+skills/              instrucciones por dominio, cada una en skills/<nombre>/SKILL.md
+skills/_shared/      convenciones compartidas entre skills SDD
 ```
 
----
+## Skills
 
-## 🚀 Flujo de Trabajo: Spec-Driven Development (SDD)
+Cada skill es un `SKILL.md` que el agente carga antes de escribir código. Varias pueden combinarse en una misma tarea.
 
-El flujo garantiza que ninguna funcionalidad compleja se programe sin antes tener especificaciones y diseño aprobados:
+| Skill | Para qué sirve |
+|---|---|
+| `caveman` | Modo de conversación comprimido, niveles lite a ultra. Aplicado por defecto en chat |
+| `humanizer` | Prosa para humanos: README, docs, guías, changelogs |
+| `diagram-design` | Diagramas de arquitectura, flujo, secuencia, ER, y más, como HTML/SVG |
+| `impeccable` | Diseño de interfaces: layout, CSS, accesibilidad, pulido visual |
+| `security-audit` | Revisión de vulnerabilidades, autenticación, modelado de amenazas |
+| `go-testing` | Tests en Go, TUI con Bubbletea, tablas de casos, teatest |
+| `sdd-*` | Ciclo completo de Spec-Driven Development |
 
-1. **Exploración (`sdd-explore`)**: Análisis del código sin modificaciones para mapear dependencias.
-2. **Propuesta (`sdd-propose`)**: Creación de `proposal.md` con intención, alcance, riesgos y plan de rollback.
-3. **Especificación (`sdd-spec`)**: Definición de requerimientos con formato BDD (*Given / When / Then*).
-4. **Diseño (`sdd-design`)**: Arquitectura técnica y diagramas de componentes o flujo.
-5. **Tareas (`sdd-tasks`)**: Desglose en tareas atómicas y secuenciales (`tasks.md`).
-6. **Implementación (`sdd-apply`)**: Escritura del código tarea por tarea con soporte para TDD estricto.
-7. **Verificación (`sdd-verify`)**: Comprobación del código contra los escenarios de la especificación.
-8. **Archivo (`sdd-archive`)**: Consolidación del cambio en el registro maestro.
+El ciclo SDD cubre diez fases: `init` (arranca SDD en un proyecto), `explore` (investigar una idea), `propose` (propuesta de cambio), `spec` (especificaciones con escenarios), `design` (diseño técnico), `tasks` (desglose en checklist), `apply` (implementación), `verify` (validación contra specs), `archive` (sync y cierre del cambio) y `onboard` (recorrido guiado del flujo completo).
 
----
+## Subagentes
 
-## 🤖 Subagentes
+- `agents/planner.md`, alias `tony-stark`. Análisis de solo lectura: arquitectura, trade-offs, plan de implementación paso a paso. Nunca edita archivos.
+- `agents/orchestrator.md`. Coordinación de tareas, ejecución secuencial con checklist, y validación de Definition of Done antes de cerrar.
 
-- **`planner`**: Agente analítico de solo lectura. Inspecciona dependencias y plantea planes óptimos sin modificar archivos.
-- **`orchestrator`**: Conductor de ejecución. Gestiona checklists (`todo_write`), delega a los skills indicados y valida la Definición de Terminado (DoD) antes de cerrar cualquier tarea.
+## Prompts y comandos
 
----
+- `/plan-flow <tarea>`: explora la arquitectura y produce un plan de ejecución.
+- `/orchestrate <tarea>`: ejecución paso a paso con checklists y DoD.
+- `/audit-code [ruta]`: auditoría de seguridad sobre un objetivo, o sobre todo el workspace.
 
-## ⚡ Comandos Slash
+`commands/` contiene los mismos flujos en formato de comando para los harness que distinguen entre prompts y comandos.
 
-- `/plan-flow <objetivo>`: Activa el flujo de planificación y análisis sin riesgo sobre el código.
-- `/orchestrate <tarea>`: Ejecuta una tarea compleja paso a paso con validaciones continuas.
-- `/audit-code [ruta]`: Corre una revisión de seguridad y sanitización con `security-audit`.
+## Uso
 
----
+Copia o enlaza este directorio en la raíz del proyecto donde trabaje el agente. Lo mínimo que necesita es `AGENTS.md`; el resto (`skills/`, `agents/`, `prompts/`) se carga bajo demanda según la tarea.
 
-## 🛠️ Compatibilidad Multi-Agente
+Los prompts y subagentes nombran capacidades (leer archivos, editar archivos, ejecutar comandos, trackear tareas, cargar skills) y nunca nombres de herramientas. Cada agente resuelve esas capacidades con las suyas, así la configuración viaja entre harness sin cambios.
 
-Este repositorio está preparado para funcionar sin configuración extra en:
-- **Claude Code**: Conecta mediante `CLAUDE.md` hacia `AGENTS.md`.
-- **OpenCode / Cursor / Pi**: Utilizan `AGENTS.md` como instrucción de contexto base.
+## Reglas de ejecución
+
+1. Comunicación con acento costeño colombiano, directa y segura. `caveman` para conversación.
+2. Cargar la skill que corresponda antes de escribir código.
+3. Ediciones quirúrgicas: cambios mínimos y enfocados, sin churn ni abstracciones prematuras.
+4. Definition of Done: validar sintaxis, lint y tests antes de cerrar una tarea. Nunca atribución de IA ni `Co-Authored-By` en commits. Nunca correr builds salvo orden explícita. Verificar respuestas contra el código real.
+5. Respuestas breves, verificadas contra el código real primero.
